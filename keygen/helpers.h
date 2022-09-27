@@ -1,12 +1,3 @@
-// fast_pow
-//      bigmod
-//      bigsquare
-//      a pow x mod n
-// euclidean
-// diophantine
-// ed fi(p)y = 1
-// primegen
-
 #include <gmp.h>
 #include <math.h>
 #include <stdio.h>
@@ -78,7 +69,7 @@ ll gcd_ext(ll a, ll b, ll *x, ll *y){
         *y = 0;
         return a;
     }else {
-        ll g = gcd_ext(b, a % b, x, y);                 // basic rec. gcd
+        ll g = gcd_ext(b, a % b, x, y);             // basic rec. gcd
         ll x_prev = *x; 
         *x = *y;                                    // x = y
         *y = x_prev - (a / b) * (*y);               // y = gen
@@ -92,10 +83,3 @@ ll diophantine_keygen(ll a, ll b, ll c){
     ll g = gcd_ext(a, b, &x, &y);                   // gonna be 1
     return ((x * c) + 2*b);                         // should be positive, adds as general solution
 }
-
-
-
-
-
-
-

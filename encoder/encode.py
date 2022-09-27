@@ -1,16 +1,6 @@
 import math
 import numpy
 
-
-# ull fast_pow(ull a, ull m, ull p){
-#     ull res = 1;
-#     for (ull i = 0; (1 << i) <= m; i++){
-#         if((m >> i) % 2 == 1) res = (res * a) % p;
-#         a = ((a*a) % p);
-#     }
-#     return res;
-# }
-
 # a^e mod n
 def fast_pow(a, e, n):
     res = 1

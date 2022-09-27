@@ -1,6 +1,6 @@
 ./keygen/keygen
 ./encoder/e_n.txt
 ./decoder/d_n.txt
-message.txt
-message2.txt
-message3.txt
+./message.txt
+./message2.txt
+./message3.txt

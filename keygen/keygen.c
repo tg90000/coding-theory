@@ -1,8 +1,3 @@
-
-// keygen: 
-// input: p, q
-// output: e, d, n
-
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -44,7 +39,6 @@ int main(){
     ull q = gen_prime();
     ull e, d, n;
     n = gen_keys(p, q, &e, &d);
-    // printf("%llu %llu %llu\n", e, d, n);
 
     FILE* f_encode;
     f_encode = fopen("../encoder/e_n.txt", "w");
