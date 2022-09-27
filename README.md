@@ -7,14 +7,14 @@ Toy code, assignment for Coding Theory class
 
 ### Example run:
   1. Generate keys in ./keygen/ :
-    1. set params in keygen.c
-    1. `gcc -o keygen keygen.c`
-    1. `./keygen`
+     1. set params in keygen.c
+     1. `gcc -o keygen keygen.c`
+     1. `./keygen`
   1. Prepare message in ./ :
-    1. edit message.txt (only alphanumeric rn)
+     1. edit message.txt (only alphanumeric rn)
   1. Encode the message in ./encoder/
-    1. `python3 encode.py`
-    1. check encoded string in ./message2.txt
+     1. `python3 encode.py`
+     1. check encoded string in ./message2.txt
   1. Decode from ./decoder/
-    1. `python3 decode.py`
-    1. check decoded message string in ./message3.txt
+     1. `python3 decode.py`
+     1. check decoded message string in ./message3.txt
