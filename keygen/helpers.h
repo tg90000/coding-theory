@@ -97,3 +97,5 @@ ll diophantine_keygen(ll a, ll b, ll c){
 
 
 
+
+

@@ -9,16 +9,16 @@
 #include "helpers.h"
 #define ull unsigned long long
 #define ll long long
-#define MINBITS 20
+#define MINBITS 10
 #define MINKEYLEN 3
+#define MAXKEYLEN 10
 
 // returns n
 ull gen_keys(ull p, ull q, ull *e, ull *d){
     ull n = p*q;
     ull phi = (p-1) * (q-1);
-    
     do{
-        *e = rand()*rand()-1;
+        *e = rand() % (1 << MAXKEYLEN);
         if ((*e)<MINKEYLEN || (*e)%2==0)continue; // e > (1 << 20)
     }
     while(gcd(*e, phi) != 1);
@@ -34,34 +34,26 @@ ull gen_prime(){
         p++;
     }
     while(!primecheck(p));
+
     return p;
 }
 
 int main(){
     srand(time(NULL));
-    // for (ull i = 999999800; i < 1000000000; i++){ // Miller-Rabin
-    //     int pass = primecheck(i);
-    //     if (pass)
-    //         printf("%llu: %d\n", i, pass);
-    // }
-    // printf("DONE ===========================\n\n");
+    ull p = gen_prime();
+    ull q = gen_prime();
+    ull e, d, n;
+    n = gen_keys(p, q, &e, &d);
+    // printf("%llu %llu %llu\n", e, d, n);
 
-    // ull res;
-    // res = bigmod(7, 88);
-    // printf("%llu\n", res);
-
-    // ll d;
-    // d = diophantine_keygen(7, 5, 1);
-    // printf("%lld\n", d);
-
-    // ll g = gcd(9, 24);
-    // printf("%lld\n", g);
-
-    // ull p;
-    // p = gen_prime();
-    // printf("%lld\n", p);
-
-
+    FILE* f_encode;
+    f_encode = fopen("../encoder/e_n.txt", "w");
+    fprintf(f_encode, "%llu\n%llu\n", e, n);
+    fclose(f_encode);
+    FILE* f_decode;
+    f_decode = fopen("../decoder/d_n.txt", "w");
+    fprintf(f_decode, "%llu\n%llu\n", d, n);
+    fclose(f_decode);
     
     return 0;
 }
