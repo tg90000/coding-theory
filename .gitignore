@@ -1,4 +1,6 @@
 keygen/keygen
+keygen/keygen_big
+keygen/keygen_big.dSYM/
 encoder/e_n.txt
 decoder/d_n.txt
 message.txt
