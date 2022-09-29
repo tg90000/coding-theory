@@ -25,8 +25,9 @@ void find_m(ull p, ull *m, ull *r){
 // a^m mod p
 ull fast_pow(ull a, ull m, ull p){
     ull res = 1;
-    for (ull i = 0; (1 << i) <= m; i++){
-        if((m >> i) % 2 == 1) res = (res * a) % p;
+    while(m>0){
+        if (m%2==1)res = (res * a) % p;
+        m >>= 1;
         a = ((a*a) % p);
     }
     return res;
