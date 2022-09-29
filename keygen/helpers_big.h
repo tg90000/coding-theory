@@ -137,12 +137,13 @@ int gcd_ext(mpz_t a, mpz_t b, mpz_t x, mpz_t y){
 }
 
 // returns x1 a solution, thats enough to generate d
-int diophantine_keygen(mpz_t a, mpz_t b, mpz_t x1){ // c = 1
+int diophantine_keygen(mpz_t a, mpz_t b, mpz_t c, mpz_t x1){ // c = 1
     mpz_t x, y;
     mpz_init(x);
     mpz_init(y);
     int g = gcd_ext(a, b, x, y);                                // gonna be 1   
-    mpz_mul_ui(b, b, 2);
+    // mpz_mul_ui(b, b, 2);
+    // mpz_mul(x, x, c);
     mpz_add(x1, x, b);                                          // should be positive, adds as general solution
     mpz_clear(x);
     mpz_clear(y);

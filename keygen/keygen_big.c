@@ -5,10 +5,10 @@
 #include "helpers_big.h"
 #define ull unsigned long long
 #define ll long long
-#define MINBITS 500
-#define MAXBITS 512
-#define MINKEYLEN 500
-#define MAXKEYLEN 512
+#define MINBITS 250
+#define MAXBITS 256
+#define MINKEYLEN 250
+#define MAXKEYLEN 256
 #define SEED 8192
 
 // returns n
@@ -18,7 +18,7 @@ void gen_keys(mpz_t p, mpz_t q, mpz_t e, mpz_t d, mpz_t n){
     mpz_init(phi);
     mpz_sub(phi, n, p);
     mpz_sub(phi, phi, q);
-    mpz_sub_ui(phi, phi, 1);                            // (p-1)*(q-1) = n - p - q + 1
+    mpz_add_ui(phi, phi, 1);                            // (p-1)*(q-1) = n - p - q + 1
 
     mpz_t e_gcd;
     mpz_init_set_ui(e_gcd,1);
@@ -44,7 +44,9 @@ void gen_keys(mpz_t p, mpz_t q, mpz_t e, mpz_t d, mpz_t n){
 
     mpz_set(e_gcd, e);
     mpz_set(phi_gcd, phi);
-    diophantine_keygen(e_gcd, phi_gcd, d);
+    mpz_t c;
+    mpz_init_set_ui(c, 1);
+    diophantine_keygen(e_gcd, phi_gcd, c, d);
     gmp_randclear(rstate);
     mpz_clears(phi, e_gcd, phi_gcd, min);
 }
@@ -85,12 +87,14 @@ int main(){
     mpz_out_str(f_encode, 10, e);
     fprintf(f_encode, "\n");
     mpz_out_str(f_encode, 10, n);
+    fprintf(f_encode, "\n");
     fclose(f_encode);
     FILE* f_decode;
     f_decode = fopen("../decoder/d_n.txt", "w");
     mpz_out_str(f_decode, 10, d);
     fprintf(f_decode, "\n");
     mpz_out_str(f_decode, 10, n);
+    fprintf(f_decode, "\n");
     fclose(f_decode);
     
     return 0;
