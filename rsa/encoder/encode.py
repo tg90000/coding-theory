@@ -46,6 +46,5 @@ def write_file(bin_str: str, path="../message2.txt"):
     return
 
 data_orig = read_to_bin_str()
-print(data_orig)
 encoded_bin_str = encode(data_orig, encode_fn)
 write_file(encoded_bin_str)

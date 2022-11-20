@@ -23,8 +23,10 @@ def decode(data: str, decode_fn: Callable[[str, int, int], str], chunck_size = 1
         lines = [line[:-1] for line in keys.readlines()]
         d, n = [int(l) for l in lines]
     chunks = data.split()
-    decoded = map(decode_fn, chunks, [d]*len(chunks), [n]*len(chunks)) 
-    ret = ''.join(d for d in decoded) 
+    decoded = list(map(decode_fn, chunks, [d]*len(chunks), [n]*len(chunks)))
+    if decoded[-1][0:8] == "00000000":
+        decoded[-1] = decoded[-1][8:]
+    ret = ''.join(d for d in decoded)
     return ret
 
 def decode_binary_string(bin_str: str) -> str:
