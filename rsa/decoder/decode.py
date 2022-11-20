@@ -15,8 +15,8 @@ def fast_pow(a, e, n):
 
 
 def decode_fn(num: str, d: int, n:int) -> str:
-    data_dec = fast_pow(int(num), d, n) # a szamok ugyanazok
-    return format(data_dec, 'b') # rossz a binaris
+    data_dec = fast_pow(int(num), d, n) 
+    return format(data_dec, 'b').zfill(16) # chunk length from encoder!
 
 def decode(data: str, decode_fn: Callable[[str, int, int], str], chunck_size = 16) -> str:
     with open("./d_n.txt", "r") as keys:
@@ -45,6 +45,5 @@ def write_output_file(string: str, path="../message3.txt"):
 bin_data = read_to_bin_str()
 num_data = decode_binary_string(bin_data)
 decoded_bin = decode(num_data, decode_fn)
-print(decoded_bin)
 string = decode_binary_string(decoded_bin)
 write_output_file(string)
