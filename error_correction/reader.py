@@ -9,6 +9,24 @@ def read_to_bin_str(path="./data/data.txt") -> str:
         ret = ''.join(format(byte, '08b') for byte in barray)
     return ret
 
+def gen_h_rec(dim: int, err_num: int, zn: int, err_num_iter: int = 1, acc_h_vec: list[int] = None, startindex: int = 0, ret_collection: list[list[int]] = []) -> list[list[int]]:
+    for i in range(startindex, dim):
+        for j in range(1,zn):
+            h = [0] * dim if not acc_h_vec else acc_h_vec.copy()
+            h[i] = j
+            if err_num_iter == err_num:
+                ret_collection.append(h)
+            else:
+                ret_collection.extend(gen_h_rec(dim, err_num, zn, err_num_iter+1, h, i+1, []))
+    return ret_collection
+
+def gen_syndromes(H: list[list[int]], err_num: int, zn: int) -> list[list[int]]:
+    dimC = len(H) # cols, len of w
+    list_all_h = [h for err in range(err_num) for h in gen_h_rec(dimC, err+1, zn)]
+    list_all_h = [(np.array(h)).transpose() for h in list_all_h]
+    ret = [np.remainder(h @ np.array(H), zn).tolist() for h in list_all_h]
+    return ret
+
 def Hamming_7_4_H(bin_str: str, data_bits = 4) -> str:
     if data_bits !=4:
         raise ValueError(f"This code has 4 data bits, got data_bits={data_bits} as parameter instead.")
@@ -22,7 +40,7 @@ def Hamming_7_4_H(bin_str: str, data_bits = 4) -> str:
         [1,0,0],
         [0,1,0],
         [0,0,1]]
-    syndrome_list = MTX #  single error correcting
+    syndrome_list = gen_syndromes(MTX, 1, 2) # MTX #  single error correcting
     word = [int(s) for s in bin_str]
     G = np.array(MTX)
     w = np.array(word).transpose()
