@@ -39,9 +39,33 @@ def read_to_bin_str(path="./data/text.txt") -> str:
         ret = ''.join(format(ord(x), '08b') for x in text)
     return ret
 
+def read_one(path="./data/data.txt")-> list[int]:
+    with open(path, "r") as f:
+        data = f.readline()
+        vec = [int(c) for c in data]
+        return vec
+
+def encode_one(G: list[list[int]], word: list[int], zn: int) -> list[int]:
+    w = np.array(word).transpose()
+    return (np.remainder(w @ np.array(G), zn)).tolist()
+
+def write_one(w: list[int], path="./data/data.txt") -> None:
+    with open(path, "w") as f:
+        string = "".join(c for c in w)
+        f.write(string)
+
 
 if __name__ == "__main__":
     # param spec
     input_str = read_to_bin_str()
     encoded_bin_str = encode(input_str, Hamming_7_4_G, 4)
     write_file(encoded_bin_str)
+    # G = [
+    # [1,0,0,0,0,1,1],
+    # [0,1,0,0,1,0,1],
+    # [0,0,1,0,1,1,0],
+    # [0,0,0,1,1,1,1]]
+    # zn = 2
+    # word = read_one()
+    # encoded = encode_one(G, word, zn)
+    # write_one(encoded)
