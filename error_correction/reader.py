@@ -2,6 +2,7 @@ import numpy as np
 from math import floor
 import textwrap
 from typing import Callable
+import sys
 
 def read_to_bin_str(path="./data/data.txt") -> str:
     ret = ""
@@ -105,30 +106,41 @@ def write_output_file(string: str, path="./data/decoded.txt"):
         f.write(string[:-1] + '\n')
     return
 
-# Example with encoder: The (4,7) Hamming code from the lecture notes
-bin_data = read_to_bin_str()
-G = [[1,0,0,0,0,1,1],
-[0,1,0,0,1,0,1],
-[0,0,1,0,1,1,0],
-[0,0,0,1,1,1,1]]
-decoded_data = decode(bin_data, Hamming_H, G, 4, 7, 2, 1, True) # Use (4,7) Hamming code with generator defined above.
-# decoded_data = decode(bin_str = bin_data, do_correct = False) # without correction for reference
-string = decode_binary_string(decoded_data)
-write_output_file(string)
+def read_one(path="./data/data_one.txt")-> str:
+    with open(path, "r") as f:
+        data = f.readline()
+        return data
 
+def write_one(w: str, path="./data/decoded_one.txt") -> None:
+    with open(path, "w") as f:
+        f.write(w)
 
-# Example for Z3, data bits = 2, code length = 4, errors = 1
-# original_word = "12"                      # (u), the original word
-# encoded_word = "1201"                     # (uG), the enocoded word
-# err_word = "1001"                         # one bit error, on the second bit
-# test_generator = [[1,0,2,2], [0,1,2,1]]   # the generator matrix
-# decoded_word = decode(
-#     bin_str=err_word,                     # word with errors
-#     correction_fn=Hamming_H,              # decoder function
-#     G = test_generator,                   # generator matrix
-#     data_bits=2,                          # original word length
-#     data_word_len = 4,                    # code length
-#     zn=3,                                 # the modulus p of the field Zp
-#     error_num = 1                         # error correcting capability of the code
-#     )
-# print(decoded_word)
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        # Example with encoder: The (4,7) Hamming code from the lecture notes
+        bin_data = read_to_bin_str()
+        G = [[1,0,0,0,0,1,1],
+        [0,1,0,0,1,0,1],
+        [0,0,1,0,1,1,0],
+        [0,0,0,1,1,1,1]]
+        decoded_data = decode(bin_data, Hamming_H, G, 4, 7, 2, 1, True) # Use (4,7) Hamming code with generator defined above.
+        # decoded_data = decode(bin_str = bin_data, do_correct = False) # without correction for reference
+        string = decode_binary_string(decoded_data)
+        write_output_file(string)
+    elif sys.argv[1] == "test":
+        # Example for Z3, data bits = 2, code length = 4, errors = 1
+        # original_word = "12"                      # (u), the original word
+        # encoded_word = "1201"                     # (uG), the enocoded word
+        # err_word = "1001"                         # one bit error, on the second bit
+        err_word = read_one()
+        test_generator = [[1,0,2,2], [0,1,2,1]]   # the generator matrix
+        decoded_word = decode(
+            bin_str=err_word,                     # word with errors
+            correction_fn=Hamming_H,              # decoder function
+            G = test_generator,                   # generator matrix
+            data_bits=2,                          # original word length
+            data_word_len = 4,                    # code length
+            zn=3,                                 # the modulus p of the field Zp
+            error_num = 1                         # error correcting capability of the code
+            )
+        write_one(decoded_word)

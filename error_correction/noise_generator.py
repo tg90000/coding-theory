@@ -2,6 +2,7 @@ import numpy as np
 import textwrap
 from typing import Callable
 from random import random
+import sys
 
 def read_to_bin_str(path="./data/data.txt") -> str:
     ret = ""
@@ -36,6 +37,36 @@ def write_file(bin_str: str, path="./data/data.txt"):
         binary_file.write(bytes(barray))
     return
 
-bin_data = read_to_bin_str()
-err_bin_text = add_noise(bin_data, 7, 1)
-write_file(err_bin_text)
+def noise_fn_test(string: str, zn=2, err_bits=1) -> str:
+    err = 0
+    string = list(string)
+    for i in range(len(string)):
+        if random() > .7:
+            string[i] = str(1-int(string[i]) % zn)
+            err += 1
+            if err >= err_bits:
+                break
+    string = ''.join(string)
+    return string
+
+def read_one(path="./data/data_one.txt")-> str:
+    with open(path, "r") as f:
+        data = f.readline()
+        return data
+
+def write_one(w: list[int], path="./data/data_one.txt") -> None:
+    with open(path, "w") as f:
+        string = "".join(str(c) for c in w)
+        f.write(string)
+
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        bin_data = read_to_bin_str()
+        err_bin_text = add_noise(bin_data, 7, 1)
+        write_file(err_bin_text)
+    elif sys.argv[1] == "test":
+        codew = read_one()
+        err_word = noise_fn_test(codew, zn=3, err_bits=1)
+        write_one(err_word)
+    else:
+        exit(1)
