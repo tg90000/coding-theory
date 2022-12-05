@@ -10,7 +10,7 @@ Requres Python 3.9 or later.
       - you can decode without error correction by swapping comments before line 114 and 115 of `reader.py`
 
 ### For assignment purposes:
-  - comment line 108-117 of `reader.py`
-  - uncomment line 120-135 of `reader.py`
-  - fill the parameters
-  - run `python reader.py`, which now writes the decoded word to the console
+  - Fill up text_one.txt with a single code word
+  - run `python writer.py test`, this outputs data_one.txt as data word
+  - run `python noise_generator.py test`, this outputs data_one.txt with error(s)
+  - run `python reader.py test`, this outputs decoded_one.txt with the corrected codeword, same as text_one.txt
