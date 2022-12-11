@@ -11,6 +11,10 @@ Requres Python 3.9 or later.
 
 ### For assignment purposes:
   - Fill up text_one.txt with a single code word
-  - run `python writer.py test`, this outputs data_one.txt as data word
-  - run `python noise_generator.py test`, this outputs data_one.txt with error(s)
-  - run `python reader.py test`, this outputs decoded_one.txt with the corrected codeword, same as text_one.txt
+  - run `python writer.py <param>`, this outputs data_one.txt as data word
+  - run `python noise_generator.py <param>`, this outputs data_one.txt with error(s)
+  - run `python reader.py <param>`, this outputs decoded_one.txt with the corrected codeword, same as text_one.txt
+  - the example `<param>` can be:
+    - test1 for a length 4 Hamming code over Z3
+    - test2 for a length 24 extended binary Golay code
+    - the generator matrices and fields can be changed in the code, the two above are just examples

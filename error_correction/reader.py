@@ -11,7 +11,10 @@ def read_to_bin_str(path="./data/data.txt") -> str:
         ret = ''.join(format(byte, '08b') for byte in barray)
     return ret
 
+# generate all error strings
 def gen_h_rec(dim: int, err_num: int, zn: int, err_num_iter: int = 1, acc_h_vec: list[int] = None, startindex: int = 0, ret_collection: list[list[int]] = []) -> list[list[int]]:
+    if startindex == 0:
+        ret_collection = []
     for i in range(startindex, dim):
         for j in range(1,zn):
             h = [0] * dim if not acc_h_vec else acc_h_vec.copy()
@@ -21,6 +24,18 @@ def gen_h_rec(dim: int, err_num: int, zn: int, err_num_iter: int = 1, acc_h_vec:
             else:
                 ret_collection.extend(gen_h_rec(dim, err_num, zn, err_num_iter+1, h, i+1, []))
     return ret_collection
+
+# get code distance
+def compute_distance(G: list[list[int]], zn: int) -> int:
+    Gnp = np.array(G)
+    code = [np.remainder(np.array(h).transpose() @ Gnp, zn) for err in range(len(G)) for h in gen_h_rec(len(G), err+1, zn)]
+    d = min([np.count_nonzero(w != 0) for w in code])
+    return d
+
+# get error correction capability of linear block code
+def get_err_corr_num(G: list[list[int]], zn: int) -> int:
+    d = compute_distance(G, zn)
+    return floor((d-1) / 2)
 
 def gen_syndromes(H: list[list[int]], list_all_h: list[list[int]], zn) -> list[list[int]]:
     ret = [np.remainder(np.array(h) @ np.array(H), zn).tolist() for h in list_all_h]
@@ -127,13 +142,14 @@ if __name__ == "__main__":
         # decoded_data = decode(bin_str = bin_data, do_correct = False) # without correction for reference
         string = decode_binary_string(decoded_data)
         write_output_file(string)
-    elif sys.argv[1] == "test":
+    elif sys.argv[1] == "test1":
         # Example for Z3, data bits = 2, code length = 4, errors = 1
         # original_word = "12"                      # (u), the original word
         # encoded_word = "1201"                     # (uG), the enocoded word
         # err_word = "1001"                         # one bit error, on the second bit
         err_word = read_one()
         test_generator = [[1,0,2,2], [0,1,2,1]]   # the generator matrix
+        err = get_err_corr_num(G = test_generator.copy(), zn = 3)
         decoded_word = decode(
             bin_str=err_word,                     # word with errors
             correction_fn=Hamming_H,              # decoder function
@@ -141,6 +157,41 @@ if __name__ == "__main__":
             data_bits=2,                          # original word length
             data_word_len = 4,                    # code length
             zn=3,                                 # the modulus p of the field Zp
-            error_num = 1                         # error correcting capability of the code
+            error_num = err                       # error correcting capability of the code
             )
         write_one(decoded_word)
+    elif sys.argv[1] == "test2":
+        # Example for the extended binary Golay code
+        # Z2, data bits = 12, code length = 24, errors = 4
+        # word example: 110011001010
+        # encoded word: 110011001010110011110000
+        # err word ex:  100011000010111011110001
+        zn = 2
+        err_word = read_one()
+        test_generator = [
+            [1,0,0,0,0,0,0,0,0,0,0,0, 0,1,1,1,1,1,1,1,1,1,1,1],
+            [0,1,0,0,0,0,0,0,0,0,0,0, 1,1,1,0,1,1,1,0,0,0,1,0],
+            [0,0,1,0,0,0,0,0,0,0,0,0, 1,1,0,1,1,1,0,0,0,1,0,1],
+            [0,0,0,1,0,0,0,0,0,0,0,0, 1,0,1,1,1,0,0,0,1,0,1,1],
+            [0,0,0,0,1,0,0,0,0,0,0,0, 1,1,1,1,0,0,0,1,0,1,1,0],
+            [0,0,0,0,0,1,0,0,0,0,0,0, 1,1,1,0,0,0,1,0,1,1,0,1],
+            [0,0,0,0,0,0,1,0,0,0,0,0, 1,1,0,0,0,1,0,1,1,0,1,1],
+            [0,0,0,0,0,0,0,1,0,0,0,0, 1,0,0,0,1,0,1,1,0,1,1,1],
+            [0,0,0,0,0,0,0,0,1,0,0,0, 1,0,0,1,0,1,1,0,1,1,1,0],
+            [0,0,0,0,0,0,0,0,0,1,0,0, 1,0,1,0,1,1,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0,0,0,0,1,0, 1,1,0,1,1,0,1,1,1,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,1, 1,0,1,1,0,1,1,1,0,0,0,1],
+        ]   # the generator matrix
+        err = get_err_corr_num(G = test_generator, zn = 2)
+        decoded_word = decode(
+            bin_str=err_word,                     # word with errors
+            correction_fn=Hamming_H,              # decoder function
+            G = test_generator,                   # generator matrix
+            data_bits=12,                         # original word length
+            data_word_len = 24,                   # code length
+            zn=2,                                 # the modulus p of the field Zp
+            error_num = err                       # error correcting capability of the code
+            )
+        write_one(decoded_word)
+    else:
+        exit(1)

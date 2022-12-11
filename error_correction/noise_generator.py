@@ -64,9 +64,13 @@ if __name__ == "__main__":
         bin_data = read_to_bin_str()
         err_bin_text = add_noise(bin_data, 7, 1)
         write_file(err_bin_text)
-    elif sys.argv[1] == "test":
+    elif sys.argv[1] == "test1":
         codew = read_one()
         err_word = noise_fn_test(codew, zn=3, err_bits=1)
+        write_one(err_word)
+    elif sys.argv[1] == "test2":
+        codew = read_one()
+        err_word = noise_fn_test(codew, zn=3, err_bits=4)
         write_one(err_word)
     else:
         exit(1)
