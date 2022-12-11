@@ -70,7 +70,7 @@ if __name__ == "__main__":
         write_one(err_word)
     elif sys.argv[1] == "test2":
         codew = read_one()
-        err_word = noise_fn_test(codew, zn=1, err_bits=4)
+        err_word = noise_fn_test(codew, zn=2, err_bits=4)
         write_one(err_word)
     else:
         exit(1)
